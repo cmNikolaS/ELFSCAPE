@@ -6,6 +6,7 @@
 #include <string>
 #include <cstdint>
 #include <iostream>
+#include <assert.h>
 
 class map
 {
@@ -16,9 +17,10 @@ class map
     void makeMap(std::string mapFile)
 {
     std::string t;
-    std::string mapSizeXS, mapSizeYS, spawnXS, spawnYS;
+    std::string mapSizeXS, mapSizeYS;
     std::fstream map;
     map.open(mapFile);
+    assert(map.is_open() == true && "CANT OPEN MAP FILE!");
 
     std::getline(map, t);
 
@@ -30,7 +32,7 @@ class map
     mapSizeX = stoi(mapSizeXS);
     mapSizeY = stoi(mapSizeYS);
 
-    for (int i = 0; i <= mapSizeX; i++)
+    for (int i = 0; i < mapSizeY; i++)
         std::getline(map, MAP[i]);
     
     map.close();
@@ -41,13 +43,29 @@ class map
     {
         makeMap(mapFile);
     }
+    void locatePlayerXY(dT &x, dT &y)
+    {
+        for(int i =0; i< mapSizeY; i++)
+        {
+            for(int j=0;j<mapSizeX;j++)
+            {
+                if(MAP[i][j] == PLAYER)
+                x = j, y = i;
+            }
+        }
+    }
 
     public:
 
+    dT getSizeX() { return mapSizeX; }
+    dT getSizeY() { return mapSizeY; }
     void printMap()
     {
         for(int i =0; i< mapSizeY; i++)
         std::cout << MAP[i] << std::endl;
     }
+
+    void deletePartOfMap(dT x, dT y) { MAP[y][x] = ' '; }
+    void drawPartOfMap(dT x, dT y, char wtd) { MAP[y][x] = wtd; }
     
 };

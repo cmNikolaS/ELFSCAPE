@@ -18,7 +18,7 @@ class movement:public map
     void fall()
     {
         Sleep(waitBeforeFall);
-        deletePartOfMap(xPosition, yPosition);
+        deletePartOfMap(yPosition, xPosition);
         yPosition++; 
         drawPartOfMap(xPosition, yPosition, PLAYER);
         jumped = false;
@@ -29,23 +29,32 @@ class movement:public map
     dT getXPos() { return xPosition; }
     bool isJumped() { return jumped; }
     void setIsJumped(bool iJ) { jumped = iJ; }
-
+    void UPDATE(int &hp) { map::UPDATE(hp); }
+    void removeTrash()
+    {
+        if(getPartOfMap(yPosition, xPosition) == fallingHead)
+        {
+            map::deletePartOfMap(yPosition-1, xPosition);
+        }
+    }
     void moveLeft()
     {
-        deletePartOfMap(xPosition, yPosition);
+        deletePartOfMap(yPosition, xPosition);
         if(xPosition-1 != 0) { xPosition--; }
+        removeTrash();
         drawPartOfMap(xPosition, yPosition, PLAYER);
     }
     void moveRight()
     {
-        deletePartOfMap(xPosition, yPosition);
+        deletePartOfMap(yPosition, xPosition);
         if(xPosition + 1 != map::getSizeX()-1) { xPosition++; }
+        removeTrash();
         drawPartOfMap(xPosition, yPosition, PLAYER);
     }
     void jump()
     {   
         if (jumped == false){
-        deletePartOfMap(xPosition, yPosition);
+        deletePartOfMap(yPosition, xPosition);
         yPosition--;
         drawPartOfMap(xPosition, yPosition, PLAYER);
         jumped = true;

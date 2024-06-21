@@ -1,1 +1,2 @@
 napraviti citanje mapa bez velicina mape
+da se ne spavnaju dva ista jedan gore jedan dole

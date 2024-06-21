@@ -30,12 +30,16 @@ class elfscapeClass:protected status, movement
         std::cout << "Y - " << movement::getSizeY() -  movement::getYPos() - 1 << ", X - " << movement::getXPos() << std::endl;        
     }
 
-    bool isAlive() { return true; }
+    bool isAlive() { return status::isAlive(); }
 
-    void DEFAULT()
+    void printHP() { for(int i = 0; i <status::getCurrHP(); i++) { std::cout << HEART; } std::cout << std::endl; }
+
+    void UPDATE()
     {
-        if (isJumped())
-        fall();
+        int hp = 0;
+        movement::UPDATE(hp);
+        status::updateHP(hp);
+
     }
 
     

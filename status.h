@@ -5,19 +5,37 @@
 class status
 {
     private:
+
     dT currHP, maxHp;
     bool ALIVE = true;
+
     protected:
-    status(dT hp=0):currHP(hp), maxHp(hp){}
+
+    void restartHP()
+    {
+        currHP = maxHp = defHP;
+        ALIVE = true;
+    }
+
+    status()
+    {
+        restartHP();
+    }
 
     public:
-    void updateHP(int hp)
+
+    void updateHP(dT hp)
     {
         currHP+=hp;
+
+        if(currHP > maxHp)
+            currHP = maxHp;
+            
         if (currHP < 1)
         ALIVE = false;
     }
-    int getCurrHP() { return currHP; }
+
+    dT getCurrHP() { return currHP; }
     dT getMaxHp() { return maxHp; }
     bool isAlive() { return ALIVE; }
 

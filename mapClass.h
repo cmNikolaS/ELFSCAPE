@@ -1,7 +1,9 @@
 #pragma once
 
 #include "defaults.h"
+#include "colors.h"
 
+#include <stdio.h>
 #include <fstream>
 #include <string>
 #include <cstdint>
@@ -9,116 +11,167 @@
 #include <assert.h>
 #include <cstdlib>
 #include <ctime>
+#include <Windows.h>
 
 class map
 {
     private:
-    dT mapSizeX, mapSizeY;
+
+    dT mapSizeX, mapSizeY, screenSizeX;
     std::string MAP[maxMapYSize];
     dT lastLocation = 0;
-    
-    void makeMap(std::string mapFile)
-{
-    std::string t;
-    std::string mapSizeXS, mapSizeYS;
-    std::fstream map;
-    map.open(mapFile);
-    assert(map.is_open() == true && "CANT OPEN MAP FILE!");
 
-    std::getline(map, t);
-
-    mapSizeYS = t[3];
-    mapSizeYS += t[4];
-    mapSizeXS = t[0];
-    mapSizeXS += t[1];
-
-    mapSizeX = stoi(mapSizeXS);
-    mapSizeY = stoi(mapSizeYS);
-
-    for (int i = 0; i < mapSizeY; i++)
-        std::getline(map, MAP[i]);
-    
-    map.close();
-    }
-    
     protected:
-    map(std::string mapFile)
+
+    void openMap()
     {
-        makeMap(mapFile);
+        std::string t, mapSizeXS, mapSizeYS;
+
+        std::fstream map;
+        map.open(mapFile);
+        assert(map.is_open() == true && "CANT OPEN MAP FILE!");
+
+        std::getline(map, t);
+
+        mapSizeYS = t[4];
+        mapSizeYS += t[5];
+        mapSizeXS = t[0];
+        mapSizeXS += t[1];
+
+        mapSizeX = stoi(mapSizeXS);
+        mapSizeY = stoi(mapSizeYS);
+
+        screenSizeX = 0;
+        dT mS = 0;
+
+        for (dT i = 0; i < mapSizeY; i++)
+        {
+            std::getline(map, MAP[i]);
+            mS = MAP[i].size();
+            if (screenSizeX < mS) { screenSizeX = mS; }
+        }
+
+        map.close();
     }
+
+    map()
+    {
+        openMap();
+    }
+
     void locatePlayerXY(dT &x, dT &y)
     {
-        for(int i =0; i< mapSizeY; i++)
+        for(dT i = 0; i < mapSizeY; i++)
         {
-            for(int j=0;j<mapSizeX;j++)
+            for(dT j = 0; j < mapSizeX; j++)
             {
-                if(MAP[i][j] == PLAYER)
-                x = j, y = i;
+                if(MAP[i][j] == PLAYER_SKELET)
+                {
+                    x = j, y = i;
+                    return;
+                }
             }
         }
     }
 
-    public:
+    protected:
     
-    char getPartOfMap(int Y, int X) { return MAP[Y][X]; }
-
+    //getters____________________________________________________________________________
+    char getPartOfMap(dT Y, dT X) { return MAP[Y][X]; }
     dT getSizeX() { return mapSizeX; }
     dT getSizeY() { return mapSizeY; }
-    void printMap()
+    //delete_draw________________________________________________________________________
+    void deletePartOfMap(dT y, dT x) { MAP[y][x] = ' '; }
+    void drawPartOfMap(dT x, dT y, char wtd) { MAP[y][x] = wtd; }
+
+    void printMap(dT numOfHP)
     {
-        for(int i =0; i< mapSizeY; i++)
+        std::ios_base::sync_with_stdio(false);
+        std::cin.tie(NULL);
+        char toPr;
+        dT crrHP = 0;
+        for(dT i = 0; i < mapSizeY; i++)
         {
-            for(int j = 0; j < mapSizeX; j++)
-            {
-                if(MAP[i][j] == wallSkelet)
+            for(dT j = 0; j < screenSizeX; j++)
+            {   
+                toPr = MAP[i][j];
+                switch(toPr)
                 {
-                    std::cout << wallShow;
+                    case HEARTSKELET: 
+                    {
+                        toPr = HEART;
+                        if(j > mapSizeX)
+                        {
+                            crrHP++;
+                            if(numOfHP >= crrHP)
+                            {
+                                HEART_COLOR();
+                            }
+                            else
+                            { 
+                                EMPTY_HEART_COLOR(); 
+                            }
+                        }
+                        else
+                        {
+                            HEART_COLOR();
+                        }
+                        break;
+                    }
+                    case fallingHeadSkelet: { FALLING_HEAD_COLOR(); toPr = fallingHead; break; }
+                    case fallingBody: { FALLING_BODY_COLOR(); break; }
+                    case wallSkelet: { WALL_COLOR(); toPr = wallShow; break; }
+                    case floorCeilSkelet: { FLOOR_COLOR(); toPr = floorCeilShow; break; }
+                    case PLAYER_SKELET: { PLAYER_COLOR(); toPr = PLAYER; break; }
+                    default: { DEFAULT_COLOR(); }
                 }
-                else if(MAP[i][j] == floorCeilSkelet)
-                {
-                    std::cout << floorCeilShow;
-                }
-                else
-                {
-                    std::cout << MAP[i][j];
-                }
+                
+                std::cout << toPr << std::flush;
+
+                DEFAULT_COLOR();
             }
             std::cout << std::endl;
         }
-
     }
-    void UPDATE(int &hp)
+
+    void UPDATE(dT &hp)
     { 
-        srand(time(0)+rand());
-        dT location = 0;
-        do
+        char last, current; 
+        for(dT i = mapSizeY - 1; i > 1; i--)
         {
-            location = (rand()%(mapSizeX-2))+1;
-        }while (location == lastLocation);
+            for(dT j = 1; j < mapSizeX - 1; j++)
+            {   
+                last = MAP[i-1][j];
+                current = MAP[i][j];
 
-        lastLocation = location; 
-
-        MAP[1][location] = fallingHead;
-
-        for(int i = mapSizeY-1; i > 1; i--)
-        {
-            for(int j=1;j<mapSizeX-1;j++)
-            {
-                if(MAP[i-1][j] == fallingHead)
+                if(last == fallingHeadSkelet)
                 {
                     if(MAP[i-2][j] == fallingBody) { MAP[i-2][j] = ' '; }
-                    if(MAP[i][j] == floorCeilSkelet || MAP[i][j] == PLAYER) { MAP[i-1][j] = ' '; if(MAP[i][j] == PLAYER) { hp--; }}
-                    else
-                    {
-                    MAP[i][j] = fallingHead; MAP[i-1][j]= fallingBody;
-                    }
+                    if(current == floorCeilSkelet || current == PLAYER_SKELET) { last = ' '; if(current == PLAYER_SKELET) { hp--; }}
+                    else { current = fallingHeadSkelet; last= fallingBody; }
                 }
+                else if(last == HEARTSKELET)
+                {
+                    if(i == 1) { break; }
+                    if(current == floorCeilSkelet || current == PLAYER_SKELET) { last = ' '; if(current == PLAYER_SKELET) { hp++; } }
+                    else { current = HEARTSKELET; last = ' '; }
+                }
+                MAP[i][j] = current;
+                MAP[i-1][j] = last;
             }
         }
-       
-    }
 
-    void deletePartOfMap(dT y, dT x) { MAP[y][x] = ' '; }
-    void drawPartOfMap(dT x, dT y, char wtd) { MAP[y][x] = wtd; }
-    
+        srand(time(0)+rand());
+        
+        dT location = 0;
+
+        do { location = (rand()%(mapSizeX-2))+1; } while (location == lastLocation);
+        
+        lastLocation = location; 
+
+        dT isHeart = rand() % HEART_CHANCE + 1;
+        
+        if(isHeart == 1) { MAP[1][location] = HEARTSKELET; }
+        else { MAP[1][location] = fallingHeadSkelet; }
+    }
 };

@@ -1,2 +1,3 @@
 napraviti citanje mapa bez velicina mape
-da se ne spavnaju dva ista jedan gore jedan dole
+RJESITI SE BLINKANJA TJ BRZE PRINTANJE
+ZABRANITI MIS NA PROGRAMU

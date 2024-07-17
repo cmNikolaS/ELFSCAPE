@@ -150,8 +150,9 @@ void WINDOW()
 {
     do
     {
+        if(updateWindow)
         simpleLibrary::setWindowSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);    
-    } while(updateWindow);
+    } while(game_is_running);
 }
 
 void MENU()

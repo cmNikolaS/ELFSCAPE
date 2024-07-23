@@ -36,24 +36,24 @@ const dT TIME_UNTIL_MOVE = 200;
 const dT TIME_UNTIL_WINDOW_FIX = 200;
 
 //default colors
-void MENU_COLOR() { setTextColor("BRIGHT GREEN"); }
-void DEFAULT_COLOR() { setTextColor("YELLOW"); }
-void PAUSE_MANU_COLOR() { setTextColor("GRAY"); }
-void CORDINATE_COLOR() { setTextColor("GRAY"); }
-void END_COLOR() { setTextColor("RED"); }
+inline void MENU_COLOR() { setTextColor("BRIGHT GREEN"); }
+inline void DEFAULT_COLOR() { setTextColor("YELLOW"); }
+inline void PAUSE_MANU_COLOR() { setTextColor("GRAY"); }
+inline void CORDINATE_COLOR() { setTextColor("GRAY"); }
+inline void END_COLOR() { setTextColor("RED"); }
 //program colors
-void EMPTY_HEART_COLOR() { setTextColor("WHITE"); }
-void HEART_COLOR() {setTextColor("RED"); }
-void FALLING_HEAD_COLOR() { setTextColor("BRIGHT BLACK"); }
-void FALLING_BODY_COLOR() { FALLING_HEAD_COLOR(); }
-void WALL_COLOR() { setTextColor("GREEN"); }
-void FLOOR_COLOR() { setTextColor("GREEN"); }
-void CEILING_COLOR() { setTextColor("GREEN"); }
-void PLAYER_COLOR() { setTextColor("BRIGHT GREEN"); }
+inline void EMPTY_HEART_COLOR() { setTextColor("WHITE"); }
+inline void HEART_COLOR() {setTextColor("RED"); }
+inline void FALLING_HEAD_COLOR() { setTextColor("BRIGHT BLACK"); }
+inline void FALLING_BODY_COLOR() { FALLING_HEAD_COLOR(); }
+inline void WALL_COLOR() { setTextColor("GREEN"); }
+inline void FLOOR_COLOR() { setTextColor("GREEN"); }
+inline void CEILING_COLOR() { setTextColor("GREEN"); }
+inline void PLAYER_COLOR() { setTextColor("BRIGHT GREEN"); }
 
 //functions
-void EXIT() { exit(0); } 
-void CLEAR() { system("cls"); }
+inline void EXIT() { exit(0); } 
+inline void CLEAR() { system("cls"); }
 
 enum{
 _MOVE_LEFT = 'a',

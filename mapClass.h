@@ -81,7 +81,7 @@ class map
     dT getSizeX() { return mapSizeX; }
     dT getSizeY() { return mapSizeY; }
     //delete_draw________________________________________________________________________
-    void deletePartOfMap(dT y, dT x) { MAP[y][x] = ' '; }
+    void deletePartOfMap(dT y, dT x) { MAP[y][x] = AIR; }
     void drawPartOfMap(dT x, dT y, char wtd) { MAP[y][x] = wtd; }
 
     void printMap(dT numOfHP)
@@ -146,15 +146,15 @@ class map
 
                 if(last == fallingHeadSkelet)
                 {
-                    if(MAP[i-2][j] == fallingBody) { MAP[i-2][j] = ' '; }
-                    if(current == floorCeilSkelet || current == PLAYER_SKELET) { last = ' '; if(current == PLAYER_SKELET) { hp--; }}
+                    if(MAP[i-2][j] == fallingBody) { MAP[i-2][j] = AIR; }
+                    if(current == floorCeilSkelet || current == PLAYER_SKELET) { last = AIR; if(current == PLAYER_SKELET) { hp--; }}
                     else { current = fallingHeadSkelet; last= fallingBody; }
                 }
                 else if(last == HEARTSKELET)
                 {
                     if(i == 1) { break; }
-                    if(current == floorCeilSkelet || current == PLAYER_SKELET) { last = ' '; if(current == PLAYER_SKELET) { hp++; } }
-                    else { current = HEARTSKELET; last = ' '; }
+                    if(current == floorCeilSkelet || current == PLAYER_SKELET) { last = AIR; if(current == PLAYER_SKELET) { hp++; } }
+                    else { current = HEARTSKELET; last = AIR; }
                 }
                 MAP[i][j] = current;
                 MAP[i-1][j] = last;
